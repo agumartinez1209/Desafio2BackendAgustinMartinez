@@ -6,32 +6,16 @@ class Contenedor {
     }
 
     async save (obj){
-        if(fileExists(this.ruta)) {
         try {
             const products = await this.getAll();
-            const newProduct = products[products.length -1]. id + 1;
-            object.id = newProduct;
-            products.push(object)
-            await fs.writeFile(this.ruta, JSON.stringify(products));
-            return newProduct;
-
-        } catch (error) {
-            throw new Error ("error al guardar")
-        }
-    
-} else {
-    object.id = 1;
-    let lastProduct = [];
-    lastProduct.push(objet)
-    try {
-        await fs.writeFile(this.ruta, JSON.stringify(lastProduct))
-        return objet.id
-
-    } catch (error) {
-        throw new Error('Error')
-    }
-
-}
+            const saveProduct =  products[products.length - 1]
+            obj.id = saveProduct.id + 1;
+            products.push(obj);
+            fs.writeFile(this.ruta, JSON.stringify(products, null,2) ) ;
+            return obj.id
+          } catch (error) {
+            
+          }
 }
     async getById (id){
 
@@ -54,15 +38,15 @@ class Contenedor {
     async deleteById (id){
         try {
             const products = await this.getAll();
-            const productId = products.find(p => p.id == id);
-            if (productId >= 0){
-                products.splice(productId,1);
-                fs.writeFile(this.ruta, JSON.stringify(products,null, 2))
-            } else {throw error}
-
-        } catch (error) {
+            const productId = products.findIndex(p => p.id == id );
+            if (productId >= 0) {
+              products.splice(productId,1);
+              fs.writeFile(this.ruta, JSON.stringify(products, null,2) ) ;
+            }
+            else { throw error}
+          } catch (error) {
             console.log("no se encontro")
-        }
+          }
         
     }
 
